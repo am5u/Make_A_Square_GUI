@@ -77,15 +77,59 @@ public class HelloController implements Initializable {
         //solveProblem();
     }
 //    char[] arr = new char[]{'L','I','T','O','Z','J','S'};
-    void setHashMap()
-    {
-        hashMap.put('L',Integer.parseInt(textL.getText()));
-        hashMap.put('Z',Integer.parseInt(textZ.getText()));
-        hashMap.put('I',Integer.parseInt(textI.getText()));
-        hashMap.put('J',Integer.parseInt(textJ.getText()));
-        hashMap.put('T',Integer.parseInt(textT.getText()));
-        hashMap.put('S',Integer.parseInt(textS.getText()));
-        hashMap.put('O',Integer.parseInt(textO.getText()));
+    // void setHashMap()
+    // {
+    //     hashMap.put('L',Integer.parseInt(textL.getText()));
+    //     hashMap.put('Z',Integer.parseInt(textZ.getText()));
+    //     hashMap.put('I',Integer.parseInt(textI.getText()));
+    //     hashMap.put('J',Integer.parseInt(textJ.getText()));
+    //     hashMap.put('T',Integer.parseInt(textT.getText()));
+    //     hashMap.put('S',Integer.parseInt(textS.getText()));
+    //     hashMap.put('O',Integer.parseInt(textO.getText()));
+    // }
+
+
+    void setHashMap() {
+        try {
+            // Check and parse each input
+            int l = Integer.parseInt(textL.getText());
+            int z = Integer.parseInt(textZ.getText());
+            int i = Integer.parseInt(textI.getText());
+            int j = Integer.parseInt(textJ.getText());
+            int t = Integer.parseInt(textT.getText());
+            int s = Integer.parseInt(textS.getText());
+            int o = Integer.parseInt(textO.getText());
+    
+            // Validate the inputs
+            if (l < 0 || z < 0 || i < 0 || j < 0 || t < 0 || s < 0 || o < 0) {
+                showAlert("Input Error", "All values must be positive integers.");
+                return;
+            }
+            if (l > 4 || z > 4 || i > 4 || j > 4 || t > 4 || s > 4 || o > 4) {
+                showAlert("Input Error", "All values must not be larger than 4.");
+                return;
+            }
+    
+            // If all checks pass, put values in the hashmap
+            hashMap.put('L', l);
+            hashMap.put('Z', z);
+            hashMap.put('I', i);
+            hashMap.put('J', j);
+            hashMap.put('T', t);
+            hashMap.put('S', s);
+            hashMap.put('O', o);
+        } catch (NumberFormatException e) {
+            showAlert("Input Error", "Please enter valid integers only.");
+        }
+    }
+    
+    // Helper method to show alerts
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     //initialize buttons and put them in 2D Grid
@@ -135,8 +179,10 @@ public class HelloController implements Initializable {
                 alert.setHeaderText("Make A Square");
                 alert.setContentText("No Solution Founded");
                 alert.showAndWait().ifPresent(rs -> {
+
                     if (rs == ButtonType.OK) {
                         System.out.println("Pressed OK.");
+                        clearboard();
                     }
                 });
             }else
@@ -165,4 +211,24 @@ public class HelloController implements Initializable {
             }
         }
     }
+
+    public void clearboard(){
+
+        for(int i=0;i<4;i++)
+        {
+            for(int j=0;j<4;j++)
+            {
+                array2DButton[i][j].setStyle("-fx-background-color: white;");
+            }
+        }
+        textI.setText("0");
+        textJ.setText("0");
+        textL.setText("0");
+        textO.setText("0");
+        textS.setText("0");
+        textT.setText("0");
+        textZ.setText("0");
+        
+    }
+
 }
