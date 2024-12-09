@@ -1,74 +1,57 @@
 package com.example.make_a_square_gui;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
+
 public class MakeASquare {
-    public static int[][] Square(HashMap<Integer, int[][]> sendPieces) throws InterruptedException {
-        
-        /*Scanner input = new Scanner(System.in);
-        int numberOfPieces = input.nextInt();
-        
-        Map<Integer, int[][]> Pieces = new HashMap<>();
-        for(int i = 0; i < numberOfPieces; i++){
-            int rows = input.nextInt();
-            int cols = input.nextInt();
-            int [][]pieceGrid = new int[rows][cols];
-            for(int x = 0; x < rows; x++){
-                for(int y = 0; y < cols; y++){
-                    pieceGrid[x][y] = input.nextInt();
-                }
-            }
-            Pieces.put(i , pieceGrid);
-        }
-        */
+    public static List<int[][]> Square(HashMap<Integer, int[][]> sendPieces) throws InterruptedException {
+
 
         //pass pieces to the slaves area...
-        Paralleling.allPieces = sendPieces;
-        Paralleling.foundBoard = false;
+        Mythread.allPieces = sendPieces;
+        Mythread.foundBoard = false;
 
-        /*
-        for(int i = 0; i < sendPieces.size(); i++){
-            int rows = sendPieces.get(i).length;
-            int cols = sendPieces.get(i)[0].length;
-            int [][]pieceGrid = new int[rows][cols];
-            for(int x = 0; x < rows; x++){
-                for(int y = 0; y < cols; y++){
-                    System.out.print(sendPieces.get(i)[x][y]+ " ");
-                }
-                System.out.println();
-            }
-        }*/
-        
+
         //preparing the slaves.
-        Paralleling masterSlave = new Paralleling();
-        ArrayList<Thread> slaves = new ArrayList<Thread>();
+        Mythread[] masterSlave = new Mythread[constants.numberOfThreads];
+         List<int[][]> allBoards = new ArrayList<>(); // List to hold all found boards
+
         for(int i = 0; i < constants.numberOfThreads; i++){
-            Thread tmp = new Thread(masterSlave , Integer.toString(i));
-            slaves.add(tmp);
+          masterSlave[i]=new Mythread();
+        masterSlave[i].setName(Integer.toString(i));
+        masterSlave[i].start();
+
         }
         
-        //go slaves....
-        for(int i = 0; i < constants.numberOfThreads; i++){
-            slaves.get(i).start();
-        }
+      
         //wait slaves to finish...
-        for(int i = 0; i < constants.numberOfThreads; i++){
-            slaves.get(i).join();
-        }
+        for(int  k = 0; k < constants.numberOfThreads; k++){
 
-        if(Paralleling.foundBoard) return Paralleling.finallyBoard;
-        else return null;
-        /*if(Paralleling.foundBoard){
-            for(int i = 0; i < Paralleling.finallyBoard.length; i++){
-                for(int j = 0; j < Paralleling.finallyBoard[0].length; j++){
-                    System.out.print( (Paralleling.finallyBoard[i][j]+1) + " ");
+
+            masterSlave[k].join();
+            if (masterSlave[k].getThBoard() != null) {
+                allBoards.add(masterSlave[k].getThBoard());
+                System.out.println("board for thread "+k);
+ 
+                for (int i = 0; i < masterSlave[k].getThBoard().length; i++) {
+                    for (int j = 0; j <masterSlave[k].getThBoard().length; j++) {
+                        System.out.print(masterSlave[k].getThBoard()[i][j] + " ");
+                    }
+                    System.out.println(); // Move to the next line after each row
                 }
-                System.out.println("");
             }
-        } else {
-            System.out.println("No Solution");
-        }*/
+
+
+        }
+        if (!allBoards.isEmpty()) {
+            return allBoards;
+            
+        }
+     else return null;
+
+
+
+
+
+        
         
     }
 }

@@ -120,12 +120,12 @@
                      <children>
                         <Button mnemonicParsing="false" onAction="#solveProblem" style="-fx-background-color: pink;" text="Solve" textFill="WHITE">
                            <font>
-                              <Font name="System Bold" size="40.0" />
+                              <Font name="System Bold" size="20.0" />
                            </font>
                         </Button>
                           <Button mnemonicParsing="false" onAction="#clearboard" style="-fx-background-color: pink;" text="clear" textFill="WHITE">
                            <font>
-                              <Font name="System Bold" size="40.0" />
+                              <Font name="System Bold" size="20.0" />
                            </font>
                         </Button>
                      </children>

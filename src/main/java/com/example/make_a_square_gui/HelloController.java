@@ -156,7 +156,7 @@ public class HelloController implements Initializable {
         for(int i=0;i<4;i++) for(int j=0;j<4;j++) array2DButton[i][j]=buttonArrayList.get(i*4+j);
     }
 
-    int [][] finalBoard;
+    List<int [][]> Boards;
     public void solveProblem()
     {
         setHashMap();
@@ -171,8 +171,12 @@ public class HelloController implements Initializable {
             }
         }
         try {
-            finalBoard=MakeASquare.Square(sendPieces);
-            if(finalBoard==null)
+
+                Boards = MakeASquare.Square(sendPieces);
+
+
+
+            if(Boards.isEmpty())
             {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Message Here...");
@@ -187,7 +191,7 @@ public class HelloController implements Initializable {
                 });
             }else
             {
-                paintButton();
+                paintButton(Boards);
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -195,7 +199,7 @@ public class HelloController implements Initializable {
     }
 
     //painting
-    void paintButton()
+    void paintButton(List<int [][]> board)
     {
         ArrayList<String> arrColor = new ArrayList<>();
         arrColor.add("-fx-background-color: green;");
@@ -203,13 +207,16 @@ public class HelloController implements Initializable {
         arrColor.add("-fx-background-color: aqua;");
         arrColor.add("-fx-background-color: yellow;");
         arrColor.add("-fx-background-color: purple;");
+        
+        for(int k=0;k<Boards.size();k++){
         for(int i=0;i<4;i++)
         {
             for(int j=0;j<4;j++)
             {
-                array2DButton[i][j].setStyle(arrColor.get(finalBoard[i][j]));
+                array2DButton[i][j].setStyle(arrColor.get(Boards.get(k)[i][j]));
             }
         }
+             }
     }
 
     public void clearboard(){

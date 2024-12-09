@@ -1,5 +1,5 @@
 package com.example.make_a_square_gui;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.locks.ReentrantLock;
 interface constants{
     public final int gridRows = 4;
@@ -19,17 +19,30 @@ interface constants{
     public final int sectionSize = numberOfBoards / numberOfThreads;
 }
 
-public class Paralleling extends Thread {
-    
+public class Mythread  extends Thread {
+    public static List<int[][]> result;
+    private volatile boolean running = true;
     static boolean foundBoard;
+    private static Set<String> boardSet = new HashSet<>();
     private ReentrantLock lock;
     public static int[][] finallyBoard;
+    private int[][] thBoard;
+
+
+    public void terminate() {
+        this.running = false;
+    }
+    public int[][] getThBoard() {
+        return thBoard;
+    }
+
+    public void setThBoard(int[][] thBoard) {
+        this.thBoard = thBoard;
+    }
+
     static public Map<Integer, int[][]> allPieces;
     
-    public Paralleling(){
-        lock = new ReentrantLock();
-    }
-    
+
     @Override
     public void run() {
         int[][] finalBoard;
@@ -43,35 +56,30 @@ public class Paralleling extends Thread {
         //last thread must complete to the end of the states.
         for(int mask = from; mask <= to; mask++){
             Board slaveBoard = new Board(allPieces);
-//            slaveBoard.decompose(mask);
             finalBoard = slaveBoard.decompose(mask);
             
-            if(foundBoard)
-                break;
+//            if(foundBoard)
+//                break;
 
 
 
 
 
+            if(finalBoard != null) {
+                synchronized (Mythread.class) {
+                    String boardKey = Arrays.deepToString(finalBoard);
+                    if (!boardSet.contains(boardKey)) {
+                        boardSet.add(boardKey);
+                        this.setThBoard(finalBoard);
 
-            if(finalBoard != null){
 
-                if (this.finallyBoard != null) {
-                    for (int i = 0; i < Paralleling.finallyBoard.length; i++) {
-                        for (int j = 0; j < Paralleling.finallyBoard[i].length; j++) {
-                            System.out.print(Paralleling.finallyBoard[i][j] + " ");
-                        }
-                        System.out.println(); // Move to the next line after each row
+
+                        foundBoard = true;
+                        finallyBoard = finalBoard;
                     }
-                } else {
-                    System.out.println("finalBoard is null.");
                 }
-
-                foundBoard = true;
-                finallyBoard = finalBoard;
-
-
             }
         }
+        System.out.println("Thread " + threadID + " finished.");
     }
 }
