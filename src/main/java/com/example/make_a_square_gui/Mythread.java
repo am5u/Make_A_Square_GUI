@@ -15,11 +15,11 @@ interface constants{
     public final int bitsPerBoard = numberOfPieces * bitsPerPiece;
     public final int numberOfBoards = (1 << bitsPerBoard);
     
-    public final int numberOfThreads = 12;
+    public final int numberOfThreads = 5;
     public final int sectionSize = numberOfBoards / numberOfThreads;
 }
 
-public class Paralleling implements Runnable {
+public class Paralleling extends Thread {
     
     static boolean foundBoard;
     private ReentrantLock lock;
@@ -49,11 +49,28 @@ public class Paralleling implements Runnable {
             if(foundBoard)
                 break;
 
+
+
+
+
+
             if(finalBoard != null){
-                lock.lock();
+
+                if (this.finallyBoard != null) {
+                    for (int i = 0; i < Paralleling.finallyBoard.length; i++) {
+                        for (int j = 0; j < Paralleling.finallyBoard[i].length; j++) {
+                            System.out.print(Paralleling.finallyBoard[i][j] + " ");
+                        }
+                        System.out.println(); // Move to the next line after each row
+                    }
+                } else {
+                    System.out.println("finalBoard is null.");
+                }
+
                 foundBoard = true;
                 finallyBoard = finalBoard;
-                lock.unlock();
+
+
             }
         }
     }
